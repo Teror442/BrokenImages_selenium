@@ -1,21 +1,18 @@
 pipeline {
     agent any
     
-    environment {
-        PYTHON_PATH = 'C:\\Python311\\python.exe'
-        PIP_PATH = 'C:\\Python311\\Scripts\\pip.exe'
-    }
-    
     stages {
         stage('Setup') {
             steps {
-                bat '%PIP_PATH% install selenium==4.29.0 requests==2.31.0'
+                bat 'where python'
+                bat 'python --version'
+                bat 'python -m pip install selenium==4.29.0 requests==2.31.0'
             }
         }
         
         stage('Test') {
             steps {
-                bat '%PYTHON_PATH% -m unittest broken_images.py -v'
+                bat 'python -m unittest broken_images.py -v'
             }
         }
     }
