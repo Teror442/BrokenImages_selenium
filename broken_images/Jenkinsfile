@@ -1,12 +1,6 @@
 pipeline {
     agent any
     
-    environment {
-        PYTHON_PATH = 'C:\\Users\\lukas\\AppData\\Local\\Programs\\Python\\Python311\\python.exe'
-        PIP_PATH = 'C:\\Users\\lukas\\AppData\\Local\\Programs\\Python\\Python311\\Scripts\\pip.exe'
-        CHROME_DRIVER_PATH = 'C:\\WebDriver\\chromedriver.exe'
-    }
-    
     stages {
         stage('Setup') {
             steps {
@@ -23,7 +17,6 @@ pipeline {
     
     post {
         always {
-            // Clean up any temporary files or processes
             sh 'pkill -f chromedriver || true'
         }
     }
