@@ -2,8 +2,8 @@ pipeline {
     agent any
     
     environment {
-        PYTHON_PATH = 'C:\\Users\\lukas\\AppData\\Local\\Programs\\Python\\Python311\\python.exe'
-        PIP_PATH = 'C:\\Users\\lukas\\AppData\\Local\\Programs\\Python\\Python311\\Scripts\\pip.exe'
+        PYTHON_PATH = 'C:\\Python311\\python.exe'
+        PIP_PATH = 'C:\\Python311\\Scripts\\pip.exe'
         CHROME_DRIVER_PATH = 'C:\\WebDriver\\chromedriver.exe'
     }
     
