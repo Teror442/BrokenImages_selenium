@@ -21,7 +21,7 @@ pipeline {
             steps {
                 script {
                     // Run the Selenium test
-                    bat "${PYTHON_PATH} broken_images.py"
+                    bat "${PYTHON_PATH} broken_images\\broken_images.py"
                 }
             }
         }
