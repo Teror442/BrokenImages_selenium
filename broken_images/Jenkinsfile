@@ -10,27 +10,21 @@ pipeline {
     stages {
         stage('Setup') {
             steps {
-                script {
-                    // Install Python dependencies
-                    bat "${PIP_PATH} install selenium==4.29.0 requests==2.31.0"
-                }
+                sh 'python -m pip install selenium==4.29.0 requests==2.31.0'
             }
         }
         
-        stage('Run Tests') {
+        stage('Test') {
             steps {
-                script {
-                    // Run the Selenium test
-                    bat "${PYTHON_PATH} broken_images\\broken_images.py"
-                }
+                sh 'python -m unittest broken_images.py -v'
             }
         }
     }
     
     post {
         always {
-            // Clean up workspace
-            cleanWs()
+            // Clean up any temporary files or processes
+            sh 'pkill -f chromedriver || true'
         }
     }
 } 
