@@ -4,15 +4,19 @@ pipeline {
     stages {
         stage('Setup') {
             steps {
-                bat 'where python'
-                bat 'python --version'
-                bat 'python -m pip install selenium==4.29.0 requests==2.31.0'
+                bat '''
+                    echo %PATH%
+                    where python
+                    python --version
+                    pip --version
+                    pip install selenium requests
+                '''
             }
         }
         
         stage('Test') {
             steps {
-                bat 'python -m unittest broken_images.py -v'
+                bat 'python -m unittest broken_images.py'
             }
         }
     }
