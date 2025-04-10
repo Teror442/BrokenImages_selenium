@@ -4,20 +4,20 @@ pipeline {
     stages {
         stage('Setup') {
             steps {
-                sh 'python -m pip install selenium==4.29.0 requests==2.31.0'
+                bat 'python -m pip install selenium==4.29.0 requests==2.31.0'
             }
         }
         
         stage('Test') {
             steps {
-                sh 'python -m unittest broken_images.py -v'
+                bat 'python -m unittest broken_images.py -v'
             }
         }
     }
     
     post {
         always {
-            sh 'pkill -f chromedriver || true'
+            bat 'taskkill /F /IM chromedriver.exe /T'
         }
     }
 } 
