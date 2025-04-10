@@ -31,6 +31,9 @@ class TestBrokenImages(unittest.TestCase):
         print(f"Total images checked: {len(images)}")
         print(f"Working images: {working_images}")
         print(f"Broken images: {broken_images}")
+        
+        self.assertGreater(working_images, 0, "No working images found on the page")
+        self.assertGreater(broken_images, 0, "No broken images found, but the page should have some")
 
 if __name__ == "__main__":
     unittest.main()
