@@ -2,48 +2,37 @@ pipeline {
     agent any
     
     environment {
-        PYTHON_HOME = 'C:\\Python311'
-        PYTHON_PATH = 'C:\\Python311\\python.exe'
-        PIP_PATH = 'C:\\Python311\\Scripts\\pip.exe'
+        PYTHON_PATH = 'C:\\Program Files\\Python311\\python.exe'
+        PIP_PATH = 'C:\\Program Files\\Python311\\Scripts\\pip.exe'
     }
     
     stages {
-        stage('Setup Python') {
+        stage('Setup') {
             steps {
                 bat '''
-                    echo Installing Python...
-                    if not exist "%PYTHON_HOME%" (
-                        mkdir "%PYTHON_HOME%"
-                        powershell -Command "Invoke-WebRequest -Uri 'https://www.python.org/ftp/python/3.11.8/python-3.11.8-amd64.exe' -OutFile 'python-installer.exe'"
-                        start /wait python-installer.exe /quiet InstallAllUsers=1 PrependPath=1 Include_test=0
-                        del python-installer.exe
-                    )
+                    echo Checking Python installation...
+                    dir "C:\\Program Files\\Python*" /s /b
+                    dir "C:\\Python*" /s /b
+                    dir "C:\\Users\\*\\AppData\\Local\\Programs\\Python*" /s /b
                     
-                    echo Setting up environment...
-                    setx PATH "%PYTHON_HOME%;%PYTHON_HOME%\\Scripts;%PATH%"
+                    echo Current PATH:
+                    echo %PATH%
                     
-                    echo Verifying Python installation...
-                    "%PYTHON_PATH%" --version
-                    "%PIP_PATH%" --version
-                '''
-            }
-        }
-        
-        stage('Install Dependencies') {
-            steps {
-                bat '''
+                    echo Trying to find Python:
+                    where python
+                    
+                    echo Trying to find pip:
+                    where pip
+                    
                     echo Installing dependencies...
-                    "%PIP_PATH%" install selenium==4.29.0 requests==2.31.0
+                    python -m pip install selenium==4.29.0 requests==2.31.0
                 '''
             }
         }
         
         stage('Test') {
             steps {
-                bat '''
-                    echo Running tests...
-                    "%PYTHON_PATH%" -m unittest broken_images.py
-                '''
+                bat 'python -m unittest broken_images.py'
             }
         }
     }
