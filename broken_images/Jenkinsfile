@@ -2,7 +2,8 @@ pipeline {
     agent any
     
     environment {
-        PYTHON_PATH = 'python'
+        PYTHON_PATH = 'C:\\Users\\lukas\\AppData\\Local\\Programs\\Python\\Python311\\python.exe'
+        PIP_PATH = 'C:\\Users\\lukas\\AppData\\Local\\Programs\\Python\\Python311\\Scripts\\pip.exe'
         CHROME_DRIVER_PATH = 'C:\\WebDriver\\chromedriver.exe'
     }
     
@@ -11,7 +12,7 @@ pipeline {
             steps {
                 script {
                     // Install Python dependencies
-                    bat 'pip install selenium==4.29.0 requests==2.31.0'
+                    bat "${PIP_PATH} install selenium==4.29.0 requests==2.31.0"
                 }
             }
         }
@@ -20,7 +21,7 @@ pipeline {
             steps {
                 script {
                     // Run the Selenium test
-                    bat 'python broken_images.py'
+                    bat "${PYTHON_PATH} broken_images.py"
                 }
             }
         }
