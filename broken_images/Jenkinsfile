@@ -2,34 +2,59 @@ pipeline {
     agent any
     
     environment {
-        PYTHON_PATH = 'C:\\Program Files\\Python311\\python.exe'
-        PIP_PATH = 'C:\\Program Files\\Python311\\Scripts\\pip.exe'
+        PYTHON_HOME = 'C:\\Python311'
+        PYTHON_PATH = 'C:\\Python311\\python.exe'
+        PIP_PATH = 'C:\\Python311\\Scripts\\pip.exe'
     }
     
     stages {
-        stage('Setup') {
+        stage('Setup Python') {
             steps {
                 bat '''
-                    echo %PATH%
-                    echo %PYTHON_PATH%
-                    echo %PIP_PATH%
+                    echo Installing Python...
+                    if not exist "%PYTHON_HOME%" (
+                        mkdir "%PYTHON_HOME%"
+                        powershell -Command "Invoke-WebRequest -Uri 'https://www.python.org/ftp/python/3.11.8/python-3.11.8-amd64.exe' -OutFile 'python-installer.exe'"
+                        start /wait python-installer.exe /quiet InstallAllUsers=1 PrependPath=1 Include_test=0
+                        del python-installer.exe
+                    )
+                    
+                    echo Setting up environment...
+                    setx PATH "%PYTHON_HOME%;%PYTHON_HOME%\\Scripts;%PATH%"
+                    
+                    echo Verifying Python installation...
                     "%PYTHON_PATH%" --version
                     "%PIP_PATH%" --version
-                    "%PIP_PATH%" install selenium requests
+                '''
+            }
+        }
+        
+        stage('Install Dependencies') {
+            steps {
+                bat '''
+                    echo Installing dependencies...
+                    "%PIP_PATH%" install selenium==4.29.0 requests==2.31.0
                 '''
             }
         }
         
         stage('Test') {
             steps {
-                bat '"%PYTHON_PATH%" -m unittest broken_images.py'
+                bat '''
+                    echo Running tests...
+                    "%PYTHON_PATH%" -m unittest broken_images.py
+                '''
             }
         }
     }
     
     post {
         always {
-            bat 'taskkill /F /IM chromedriver.exe /T'
+            bat '''
+                echo Cleaning up...
+                taskkill /F /IM chromedriver.exe /T 2>nul
+                taskkill /F /IM python.exe /T 2>nul
+            '''
         }
     }
 } 
